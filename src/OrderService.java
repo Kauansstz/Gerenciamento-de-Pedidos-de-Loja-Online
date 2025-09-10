@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Map;
 
 public class OrderService {
     Integer idPedido;
@@ -30,17 +31,31 @@ public class OrderService {
         return flag;
     }
 
-    public void precoDesconto(Double preco){
-        List<String> clienteCadastrada = OrderRequest.clienteReserva;
-        String cliente = OrderRequest.nomeCliente;
+    public static void precoDesconto(List<String> pedidos, Map<String, Double> cardapio){
+        List<String> clienteCadastrada = Customer.clienteReserva;
+        String cliente = Customer.nomeCliente;
+        Double total = 0.0;
+        
+        for(String pedido: pedidos){
+            Double preco = cardapio.get(pedido); 
+            if(preco != null){
+                total += preco;
+                System.out.println(pedido + " - R$ " + String.format("%.2f", preco));
+            } else {
+                System.out.println("Pedido não encontrado no cardápio: " + pedido);
+            }
+        }
         if (clienteCadastrada.contains(cliente)) {
-            Double desconto = preco * 0.10;
-            Double precoFinal = preco - desconto;
-            System.out.println("O valor ficou: " + precoFinal);
+            Double desconto = total * 0.10;
+            Double precoFinal = total - desconto;
+            String formatada = String.format("O valor ficou: R$ %.2f", precoFinal);
+            System.out.println(formatada);
         }
         else{
-            System.out.println("Cliente comum, preço normal: " + preco);
+            System.out.println("Cliente comum, preço normal: " + total);
         }
         
     }
+
+    
 }
